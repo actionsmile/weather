@@ -1,0 +1,16 @@
+<iPhone>
+  <InfoAdditions>
+    <![CDATA[
+      <key>UIDeviceFamily</key>
+      <array>
+        <string>1</string>
+        <string>2</string>
+      </array>
+      <key>UIStatusBarStyle</key>
+      <string>UIStatusBarStyleBlackOpaque</string>
+      <key>UIRequiresPersistentWiFi</key>
+      <string>YES</string>
+    ]]>
+  </InfoAdditions>
+  <requestedDisplayResolution>high</requestedDisplayResolution>
+</iPhone>
