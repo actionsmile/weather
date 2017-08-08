@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://ns.adobe.com/air/application/@airversion@">
+  <id>@app.id@</id>
+  <versionNumber>@version@</versionNumber>
+  <filename>@title@</filename>
+  <description />
+  <name>@app.name@</name>
+  <copyright>@publisher@</copyright>
+  <initialWindow>
+    <title>@app.name@</title>
+    <content>@content@</content>
+    <visible>true</visible>
+    <fullScreen>true</fullScreen>
+    <aspectRatio>landscape</aspectRatio>
+    <renderMode>direct</renderMode>
+    <autoOrients>true</autoOrients>
+    <systemChrome>standard</systemChrome>
+  </initialWindow>
+  <icon>
+@icon.pack@
+  </icon>
+  <customUpdateUI>false</customUpdateUI>
+  <allowBrowserInvocation>false</allowBrowserInvocation>
+@manifest@
+  <supportedLanguages>@languages@</supportedLanguages>
+  <supportedProfiles>desktop extendedDesktop mobileDevice extendedMobileDevice</supportedProfiles>
+@extensions@
+</application>
+
