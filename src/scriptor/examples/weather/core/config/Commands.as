@@ -3,6 +3,7 @@ package scriptor.examples.weather.core.config {
 
 	import scriptor.events.ApplicationEvent;
 	import scriptor.examples.weather.core.commands.NullCommand;
+	import scriptor.examples.weather.core.commands.hooks.GetConfig;
 	import scriptor.examples.weather.core.commands.hooks.InitStageOptions;
 	/**
 	 * @author Aziz Zainutdin (aloha at scriptor.me)
