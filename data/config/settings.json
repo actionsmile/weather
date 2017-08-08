@@ -1,21 +1,3 @@
 {
-	"match":{
-		"width" : 20,
-		"height" : 180,
-		"texture" : "match"
-	},
-
-	"assetsFolder" : "assets",
-
-	"background" : "background",
-
-	"accuracy" : {
-		"offset" : 15,
-		"rotation" : 20
-	},
-
-	"hint" : {
-		"texture" : "hint",
-		"timer" : 3000
-	}
+	
 }
