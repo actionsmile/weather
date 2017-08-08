@@ -16,7 +16,6 @@ package scriptor.examples.weather {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
-	import flash.system.Security;
 
 	/**
 	 * @author Aziz Zainutdin (aloha at scriptor.me)
@@ -57,8 +56,6 @@ package scriptor.examples.weather {
 		 * @return void
 		 */
 		private function initialize() : void {
-			Security.allowDomain("*");
-			Security.allowInsecureDomain("*");
 
 			this.context.
 				install(DebugBundle).

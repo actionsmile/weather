@@ -34,22 +34,24 @@ package scriptor.examples.weather.core.commands.hooks {
 
 		public function hook() : void {
 			var configFolder : File = File.applicationDirectory.resolvePath(FolderNames.CONFIG);
-			this.logger.debug("Searching for config in '{0}' folder", [configFolder.nativePath]);
-			configFolder.exists && configFolder.isDirectory && configFolder.getDirectoryListing().forEach(this.parseFile);
+			if (configFolder) {
+				this.logger.debug("Searching for config in '{0}' folder", [configFolder.nativePath]);
+				configFolder.exists && configFolder.isDirectory && configFolder.getDirectoryListing().forEach(this.parseFile);
 
-			configFolder = null;
-			this._stream = null;
+				configFolder = null;
+				this._stream = null;
 
-			this.config.ready.addOnce(this.onConfigReady);
-			this.config.initialize(this._source);
+				this.config.ready.addOnce(this.onConfigReady);
+				this.config.initialize(this._source);
+			} else {
+				this.logger.error("There are no any config files");
+				this.dispose();
+			}
 		}
 
 		private function onConfigReady() : void {
 			this.dispatcher.dispatchEvent(new ApplicationEvent(ApplicationEvent.CONFIG_PARSED));
-			this.dispatcher = null;
-			this.logger = null;
-			this.config = null;
-			this._source = null;
+			this.dispose();
 		}
 
 		private function parseFile(file : File, ...rest) : void {
@@ -71,6 +73,13 @@ package scriptor.examples.weather.core.commands.hooks {
 			}
 			current = null;
 			configString = null;
+		}
+
+		private function dispose() : void {
+			this.dispatcher = null;
+			this.logger = null;
+			this.config = null;
+			this._source = null;
 		}
 	}
 }
