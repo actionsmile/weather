@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?><!--ant-->
+<project name="packager" basedir="./../">
+<!-- identify properties file -->
+  <property file="package.properties"/>
+  <property file="local.properties"/>
+
+  <target name="usage">
+    <echo message=""/>
+    <echo message="+--------------------------------------------------------------------+"/>
+    <echo message="|                          -= Build Usage =-                         |"/>
+    <echo message="+--------------------------------------------------------------------+"/>
+    <echo message=""/>
+    <echo message="Available targets are:"/>
+    <echo message=""/>
+    <echo message="clean             --&gt; Clean build directory"/>
+    <echo message="init              --&gt; Creates build directory"/>
+    <echo message="compile           --&gt; Compile App SWF file"/>
+    <echo message="package-ios       --&gt; Build ${project.name} iOS application"/>
+    <echo message="package-android   --&gt; Build ${project.name} android application"/>
+    <echo message=""/>
+  </target>
+<!-- Clean Build and Report files -->
+  <target name="clean">
+<!-- Remove all directories created during the build process -->
+    <echo>[clean] Removing Build directory</echo>
+    <delete dir="${build.loc}"/>
+    <delete dir="${temp.loc}"/>
+    <delete>
+      <fileset dir="${bin.loc}" includes="**/*.*"/>
+    </delete>
+
+    <echo>[clean] Build directory removed</echo>
+  </target>
+<!-- Create directories needed for the build process -->
+  <target name="init" depends="clean">
+    <echo>[init] Creating Build directory</echo>
+    <mkdir dir="${build.loc}"/>
+    <echo>[init] Build directory created</echo>
+  </target>
+
+<!-- Compile release SWF -->
+  <target name="compile">
+    <echo>[compile] Compiling SWF file from sources</echo>
+    <echo>[compile] Using Flex SDK at: ${flex.home}</echo>
+    <condition property="debug" else="false">
+      <isset property="debug"/>
+    </condition>
+    <antcall target="init"/>
+    <exec executable="${mxmlc}" dir="${flex.home}/frameworks" failonerror="true">
+      <arg value="${main.src.loc}/${main.package}/${main.class.name}.as" />
+      <arg value="-source-path=${main.src.loc}" />
+      <arg value="-load-config=${compiler.config}" />
+      <arg value="-output=${bin.loc}/${project.name.versioned}.swf" />
+      <arg value="-default-size=1280,960" />
+      <arg value="-default-background-color=0x000000" />
+      <arg value="-library-path+=${lib.loc}" />
+      <arg value="-define=CONFIG::DEBUG,${debug}"/>
+      <arg value="-verbose-stacktraces=true" />
+      <arg value="-publisher=${publisher.name}" />
+      <arg value="-creator=${creator.name}" />
+      <arg value="-title=${title}" />
+      <arg value="-debug=${debug}" />
+    </exec>
+    <echo>[compile] Release SWF ${project.name.versioned}.swf created successfully</echo>
+  </target>
+
+  <target name="prepare" description="Prepare packaging data">
+    <echo>[prepare] Preparing files for package ${title}</echo>
+    <echo>[prepare] ---------------------------------------</echo>
+
+    <loadresource property="icon.set">
+      <file file="${icon.resource.file}"/>
+    </loadresource>
+    <loadresource property="current.manifest">
+      <file file="${manifest}"/>
+    </loadresource>
+    <loadresource property="languages.loc">
+      <file file="${language.resource.file}"/>
+    </loadresource>
+    <loadresource property="extensions.loc">
+      <file file="${ane.resource.file}"/>
+    </loadresource>
+
+      <mkdir dir="${temp.loc}/${app.icons.dir}"/>
+      <mkdir dir="${temp.loc}/${assets.dir}"/>
+      <mkdir dir="${temp.loc}/${config.dir}"/>
+      <copy file="${bin.loc}/${project.name.versioned}.swf" todir="${temp.loc}"/>
+      <copy file="${templates.loc}/${project.name}-app.xml" todir="${temp.loc}">
+        <filterchain>
+          <replacetokens>
+            <token key="icon.pack" value="${icon.set}"/>
+            <token key="app.id" value="${app.id}"/>
+            <token key="app.name" value="${project.name}"/>
+            <token key="icons" value="${app.icons.dir}"/>
+            <token key="manifest" value="${current.manifest}"/>
+            <token key="languages" value="${languages.loc}"/>
+            <token key="extensions" value="${extensions.loc}"/>
+            <token key="version" value="${ver.num}"/>
+            <token key="title" value="${title}"/>
+            <token key="publisher" value="${publisher.name}"/>
+            <token key="content" value="${project.name.versioned}.swf"/>
+          </replacetokens>
+        </filterchain>
+      </copy>
+
+      <replace file="${temp.loc}/${project.name}-app.xml" token="@icons@" value="${app.icons.dir}" />
+
+      <copy todir="${temp.loc}/${app.icons.dir}">
+        <fileset dir="${icons.loc}/${icons.dir}"/>
+      </copy>
+      <copy todir="${temp.loc}/${assets.dir}">
+        <fileset dir="${data.loc}/${assets.dir}"/>
+      </copy>
+      <copy todir="${temp.loc}/${config.dir}">
+        <fileset dir="${data.loc}/${config.dir}"/>
+      </copy>
+      <copy todir="${bin.loc}">
+        <fileset dir="${temp.loc}" excludes="**/*.swf" />
+      </copy>
+      <echo>[prepare] Files copied to ${temp.loc} directory</echo>
+  </target>
+
+  <target name="check-params">
+    <echo>Checking provided params</echo>
+    <!-- Check properties -->
+    <fail message="Certificate is not setted">
+     <condition>
+       <not>
+         <isset property="keystore"/>
+       </not>
+     </condition>
+   </fail>
+   <fail message="Certificate password is not setted">
+     <condition>
+       <not>
+         <isset property="pass"/>
+       </not>
+     </condition>
+   </fail>
+   <fail message="Package type is not setted">
+     <condition>
+       <not>
+         <isset property="build.type"/>
+       </not>
+     </condition>
+   </fail>
+  </target>
+
+  <target name="package-android">
+    <echo>[package] Packaging Android version of ${project.name.versioned}</echo>
+    <antcall target="check-params"/>
+    <antcall target="compile"/>
+    
+    <antcall target="prepare">
+      <param name="icon.resource.file" value="${android.iconpack.file}"/>
+      <param name="manifest" value="${android.manifest.file}"/>
+      <param name="atlas.type" value="${android.atlas.type}"/>
+      <param name="atlas.loc" value="${android.atlases.loc}"/>
+      <param name="icons.loc" value="${android.icons.loc}"/>
+    </antcall>
+
+    <antcall target="build">
+      <param name="current.target" value="${build.type}"/>
+      <param name="certificate" value="${keystore}"/>
+      <param name="certificate.pass" value="${pass}"/>
+      <param name="extension" value="apk"/>
+      <param name="aditional.params" value=""/>
+      <param name="provision.profile" value=""/>
+    </antcall>
+  </target>
+
+  <target name="debug-info-true" if="${debug}">
+    <echo>[build] Building using debug settings</echo>
+    <loadresource property="debug.info">
+      <string value="-listen 7936" />
+    </loadresource>
+  </target>
+  <target name="debug-info-false" unless="${debug}">
+    <echo>[build] Building using release settings</echo>
+    <loadresource property="debug.info">
+      <string value=" " />
+    </loadresource>
+  </target>
+  <target name="build" depends="debug-info-true, debug-info-false">
+    <echo>[build] Debug info is set to '${debug.info}'</echo>
+    <exec executable="${adt.loc}" failonerror="true">
+      <arg value="-package"/>
+      <arg line="-target ${current.target}"/>
+      <arg line="${debug.info}" />
+      <!-- Provide certificate and proper provision profile -->
+      <arg line="-storetype pkcs12"/> 
+      <arg line="-keystore ${certificate}"/> 
+      <arg line="-storepass ${certificate.pass}"/>
+      <arg line="${provision.profile}"/>
+      <!-- Output -->
+      <arg value="${temp.loc}/${project.name.versioned}.${extension}"/>
+      <!-- App descriptor -->
+      <arg value="${temp.loc}/${project.name}-app.xml"/>
+      <!-- Adobe Native Extensions -->
+      <!-- arg line="-extdir ${ane.loc}"/ -->
+      <!-- Include app swf-file -->
+      <arg line="-C ${temp.loc} ${project.name.versioned}.swf"/>
+      <!-- Include assets & levels -->
+      <arg line="-C ${temp.loc} ${assets.dir}"/>
+      <arg line="-C ${temp.loc} ${config.dir}"/>
+      <arg line="-C ${temp.loc} ${app.icons.dir}"/>
+      <arg line="${aditional.params}"/>
+    </exec>
+    <!-- Copies packaged app to build directory -->
+    <copy file="${temp.loc}/${project.name.versioned}.${extension}" todir="${build.loc}"/>
+    <!-- Removes temp directory -->
+    <delete dir="${temp.loc}"/>
+  </target>
+</project>
