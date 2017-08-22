@@ -1,5 +1,5 @@
-package scriptor.examples.weather.model {
-	import scriptor.additional.api.IConfig;
+package scriptor.examples.weather.model.impl {
+	import scriptor.examples.weather.model.api.IWeatherConfig;
 
 	import org.osflash.signals.ISignal;
 	import org.osflash.signals.Signal;
@@ -7,7 +7,7 @@ package scriptor.examples.weather.model {
 	/**
 	 * @author Aziz Zainutdin (aloha at scriptor.me)
 	 */
-	public class WeatherConfig implements IConfig {
+	public class WeatherConfig implements IWeatherConfig {
 		/**
 		 * @private
 		 */
@@ -37,6 +37,9 @@ package scriptor.examples.weather.model {
 
 		public function get ready() : ISignal {
 			return this._ready ||= new Signal();
+		}
+
+		public function configure() : void {
 		}
 	}
 }

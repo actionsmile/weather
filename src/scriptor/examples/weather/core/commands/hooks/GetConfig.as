@@ -2,9 +2,9 @@ package scriptor.examples.weather.core.commands.hooks {
 	import robotlegs.bender.framework.api.IHook;
 	import robotlegs.bender.framework.api.ILogger;
 
-	import scriptor.additional.api.IConfig;
 	import scriptor.additional.enums.FolderNames;
 	import scriptor.events.ApplicationEvent;
+	import scriptor.examples.weather.model.api.IWeatherConfig;
 
 	import flash.events.IEventDispatcher;
 	import flash.filesystem.File;
@@ -22,7 +22,7 @@ package scriptor.examples.weather.core.commands.hooks {
 		public var dispatcher : IEventDispatcher;
 
 		[Inject]
-		public var config : IConfig;
+		public var config : IWeatherConfig;
 		/**
 		 * @private
 		 */
