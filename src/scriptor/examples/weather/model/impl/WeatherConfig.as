@@ -1,4 +1,5 @@
 package scriptor.examples.weather.model.impl {
+	import scriptor.additional.model.ObjectInitializer;
 	import scriptor.examples.weather.model.api.IWeatherConfig;
 
 	import org.osflash.signals.ISignal;
@@ -7,7 +8,7 @@ package scriptor.examples.weather.model.impl {
 	/**
 	 * @author Aziz Zainutdin (aloha at scriptor.me)
 	 */
-	public class WeatherConfig implements IWeatherConfig {
+	public class WeatherConfig extends ObjectInitializer implements IWeatherConfig {
 		/**
 		 * @private
 		 */
@@ -32,7 +33,9 @@ package scriptor.examples.weather.model.impl {
 			}
 		}
 
-		public function initialize(source : Object) : void {
+		override public function initialize(source : Object) : void {
+			super.initialize(source);
+			this.ready.dispatch();
 		}
 
 		public function get ready() : ISignal {

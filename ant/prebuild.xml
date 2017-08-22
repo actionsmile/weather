@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 
-<project default="copy" basedir="." name="Prebuild tasks">
+<project default="copy" basedir="./../" name="Prebuild tasks">
 	<echo message="pulling in property files"/>
 	<property file="build.properties"/>
 	<echo message="Copying content folders"/>
 	<target name="copy" depends="del">
- 		<copy todir="${bin.folder}/${config.folder}"><fileset dir="${config.folder}"/></copy>
-		<copy todir="${bin.folder}/${assets.folder}"><fileset dir="${assets.folder}"/></copy>
+ 		<copy todir="${bin.folder}/${config.folder}"><fileset dir="${data.folder}/${config.folder}"/></copy>
+		<copy todir="${bin.folder}/${assets.folder}"><fileset dir="${data.folder}/${assets.folder}"/></copy>
 	</target>
 	
 	<echo message="Deleting content folders from bin directory"/>
