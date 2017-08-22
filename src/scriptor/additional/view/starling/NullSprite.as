@@ -1,4 +1,4 @@
-package scriptor.examples.weather.view {
+package scriptor.additional.view.starling {
 	import starling.display.Sprite;
 
 	/**
