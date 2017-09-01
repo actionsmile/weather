@@ -4,7 +4,7 @@ package scriptor.additional.api {
 	/**
 	 * @author Aziz Zainutdin (aloha at scriptor.me)
 	 */
-	public interface IAppConfig extends ICanInitialize {
+	public interface IAppConfig extends ICanInitialize, IDisposable {
 		/**
 		 * Provides an instance of <code>ISignal</code>, which is dispatched, when config is ready
 		 */
