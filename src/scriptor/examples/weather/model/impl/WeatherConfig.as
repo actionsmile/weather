@@ -41,8 +41,5 @@ package scriptor.examples.weather.model.impl {
 		public function get ready() : ISignal {
 			return this._ready ||= new Signal();
 		}
-
-		public function configure() : void {
-		}
 	}
 }

@@ -65,7 +65,7 @@ package scriptor.examples.weather.core.commands.hooks {
 				this._stream.close();
 
 				current = JSON.parse(configString);
-				configString = file.name.split(".")[0];
+				configString = file.name.substr(0, file.name.lastIndexOf("."));
 				this.logger.debug("Config '{0}' parsed and saved to model as '{1}'", [file.name, configString]);
 				this._source[configString] = current;
 			} else {
