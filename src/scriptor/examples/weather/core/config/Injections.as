@@ -23,7 +23,7 @@ package scriptor.examples.weather.core.config {
 		[PreDestroy]
 		public function dispose() : void {
 			this.context.injector.unmap(IWeatherConfig);
-			
+
 			this.config.dispose();
 			this._config = null;
 		}
